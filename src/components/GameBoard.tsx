@@ -2,13 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { WinnerEffect } from './WinnerEffect'
-
-type Player = 'red' | 'yellow' | null
-type Board = Player[][]
-type Scores = {
-  red: number
-  yellow: number
-}
+import { ComputerPlayer, type Difficulty } from './ComputerPlayer'
+import { type Player, type Board, type Scores } from '../types/types'
 
 export default function GameBoard() {
   const [board, setBoard] = useState<Board>(
@@ -24,12 +19,22 @@ export default function GameBoard() {
     red: 0,
     yellow: 0
   })
+  const [isComputerMode, setIsComputerMode] = useState(false);
+  const [computerPlayer, setComputerPlayer] = useState<'red' | 'yellow'>('yellow');
+  const [difficulty, setDifficulty] = useState<Difficulty>('medium');
 
   // Initialize sound effects
   useEffect(() => {
     setDropSound(new Audio('/drop.wav'))
     setWinSound(new Audio('/win.wav'))
   }, [])
+
+  // Computer move effect
+  useEffect(() => {
+    if (isComputerMode && currentPlayer === computerPlayer && !winner) {
+      makeComputerMove();
+    }
+  }, [currentPlayer, isComputerMode, winner]);
 
   const resetGame = () => {
     setBoard(Array(6).fill(null).map(() => Array(7).fill(null)))
@@ -44,6 +49,16 @@ export default function GameBoard() {
       yellow: 0
     })
   }
+
+  const makeComputerMove = async () => {
+    if (!isComputerMode || currentPlayer !== computerPlayer || winner) return;
+
+    // Wait a bit to make it feel more natural
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    const columnToPlay = ComputerPlayer.getMove(board, computerPlayer, difficulty);
+    makeMove(columnToPlay);
+  };
 
   const makeMove = async (column: number) => {
     if (winner || dropAnimation) return
@@ -123,6 +138,41 @@ export default function GameBoard() {
           <div className="w-8 h-8 rounded-full bg-yellow-400 mb-2"></div>
           <span className="font-bold">{scores.yellow}</span>
         </div>
+      </div>
+
+      {/* Game Mode Controls */}
+      <div className="mb-4 flex gap-4">
+        <button
+          onClick={() => {
+            setIsComputerMode(!isComputerMode);
+            resetGame();
+          }}
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+        >
+          {isComputerMode ? "2 Players" : "Play vs Computer"}
+        </button>
+        {isComputerMode && (
+          <>
+            <button
+              onClick={() => {
+                setComputerPlayer(computerPlayer === 'red' ? 'yellow' : 'red');
+                resetGame();
+              }}
+              className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors"
+            >
+              Computer plays as {computerPlayer === 'red' ? 'Red' : 'Yellow'}
+            </button>
+            <select
+              value={difficulty}
+              onChange={(e) => setDifficulty(e.target.value as Difficulty)}
+              className="px-4 py-2 rounded border border-gray-300"
+            >
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </>
+        )}
       </div>
 
       {/* Column Indicators */}
