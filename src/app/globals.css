@@ -3,13 +3,36 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-rgb: 255, 255, 255;
+  --max-width: 700px;
+  --border-radius: 12px;
+  --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
+    'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
+    'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-rgb));
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  min-height: 100vh;
 }
 
 @keyframes dropPiece {
@@ -18,6 +41,20 @@ body {
   }
   to {
     transform: translateY(0);
+  }
+}
+
+
+.game-title {
+  font-size: 2rem;
+  text-align: center;
+  margin: 20px 0;
+}
+
+@media screen and (max-width: 480px) {
+  .game-title {
+    font-size: 1.5rem;
+    margin: 15px 0;
   }
 }
 
@@ -107,4 +144,241 @@ body {
 
 .column-hover-effect-yellow {
   box-shadow: 0 0 8px rgba(250, 204, 21, 0.6); /* yellow glow */
+}
+
+.game-board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 700px; /* Maximum width on desktop */
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  width: 100%;
+  max-width: 100%;
+  background-color: #0066cc;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.cell {
+  aspect-ratio: 1/1; /* Maintain square cells */
+  background-color: white;
+  border-radius: 50%;
+  border: 2px solid #0052a3;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Responsive cell sizes */
+@media screen and (max-width: 600px) {
+  .board {
+    gap: 3px;
+    padding: 5px;
+  }
+
+  .cell {
+    border-width: 1px;
+  }
+}
+
+/* Controls and UI elements */
+.controls {
+  width: 100%;
+  max-width: 700px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  background-color: #0066cc;
+  color: white;
+  min-width: 120px;
+}
+
+/* Status messages */
+.status {
+  font-size: 1.2rem;
+  margin: 15px 0;
+  text-align: center;
+}
+
+/* Responsive adjustments for smaller screens */
+@media screen and (max-width: 480px) {
+  .controls {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .button {
+    width: 100%;
+    max-width: 200px;
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .status {
+    font-size: 1rem;
+  }
+}
+
+/* Game pieces (red and yellow tokens) */
+.red {
+  background-color: #ff4444;
+}
+
+.yellow {
+  background-color: #ffeb3b;
+}
+
+/* Container for the entire game */
+.game-container {
+  width: 100%;
+  max-width: 100vw;
+  padding: 15px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.difficulty-selector {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+@media screen and (max-width: 480px) {
+  .difficulty-selector {
+    flex-direction: column;
+    width: 100%;
+    max-width: 200px;
+  }
+}
+
+/* Base container styles */
+.game-container {
+  width: 100%;
+  max-width: 100vw;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Game board wrapper */
+.game-board {
+  width: 100%;
+  max-width: min(90vw, 700px); /* Use the smaller of 90vw or 700px */
+  margin: 0 auto;
+  padding: 10px;
+}
+
+/* Board grid */
+.board {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: min(1.5vw, 5px); /* Responsive gap */
+  width: 100%;
+  background-color: #0066cc;
+  padding: min(2vw, 10px); /* Responsive padding */
+  border-radius: 10px;
+  aspect-ratio: 7/6; /* Maintain the aspect ratio of the game board */
+}
+
+/* Individual cells */
+.cell {
+  width: 100%;
+  aspect-ratio: 1/1;
+  background-color: white;
+  border-radius: 50%;
+  border: min(0.5vw, 2px) solid #0052a3;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  position: relative;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 600px) {
+  .game-board {
+    padding: 5px;
+  }
+
+  .board {
+    gap: 3px;
+    padding: 5px;
+  }
+
+  .cell {
+    border-width: 1px;
+  }
+}
+
+/* Extra small screens */
+@media screen and (max-width: 320px) {
+  .game-board {
+    padding: 2px;
+  }
+
+  .board {
+    gap: 2px;
+    padding: 4px;
+  }
+}
+
+/* Game pieces */
+.red, .yellow {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.red {
+  background-color: #ff4444;
+}
+
+.yellow {
+  background-color: #ffeb3b;
+}
+
+/* Animation adjustments */
+.piece-drop {
+  animation: dropPiece 0.5s ease-in;
+}
+
+@keyframes dropPiece {
+  from {
+    transform: translateY(-400%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
