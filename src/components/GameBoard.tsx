@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { WinnerEffect } from './WinnerEffect'
 
 type Player = 'red' | 'yellow' | null
 type Board = Player[][]
@@ -14,6 +15,7 @@ export default function GameBoard() {
     Array(6).fill(null).map(() => Array(7).fill(null))
   )
   const [currentPlayer, setCurrentPlayer] = useState<'red' | 'yellow'>('red')
+  const [hoverColumn, setHoverColumn] = useState<number | null>(null);
   const [winner, setWinner] = useState<Player>(null)
   const [dropAnimation, setDropAnimation] = useState<{ row: number; col: number } | null>(null)
   const [dropSound, setDropSound] = useState<HTMLAudioElement | null>(null)
@@ -124,35 +126,58 @@ export default function GameBoard() {
         </div>
       </div>
 
-      <div className="bg-blue-500 p-4 rounded-lg">
+      <div className="bg-blue-500 p-4 rounded-lg relative">
+        {winner && <WinnerEffect />}
         {board.map((row, rowIndex) => (
           <div key={rowIndex} className="flex">
             {row.map((cell, colIndex) => (
               <div
                 key={`${rowIndex}-${colIndex}`}
+                onMouseEnter={() => setHoverColumn(colIndex)}
+                onMouseLeave={() => setHoverColumn(null)}
                 className={`
-                  w-16 h-16 m-1 rounded-full cursor-pointer
-                  transition-all duration-100 ease-in-out
-                  ${!cell ? 'bg-white' : ''}
-                  ${cell === 'red' ? 'bg-red-500' : ''}
-                  ${cell === 'yellow' ? 'bg-yellow-400' : ''}
-                  ${dropAnimation?.row === rowIndex && dropAnimation?.col === colIndex 
-                    ? 'scale-90 bg-opacity-80' : ''}
-                `}
+          w-16 h-16 m-1 rounded-full cursor-pointer
+          transition-all duration-100 ease-in-out
+          ${!cell ? "bg-white" : ""}
+          ${cell === "red" ? "bg-red-500" : ""}
+          ${cell === "yellow" ? "bg-yellow-400" : ""}
+          ${hoverColumn === colIndex ? "column-hover-effect" : ""}
+          ${dropAnimation?.row === rowIndex && dropAnimation?.col === colIndex
+                    ? "piece-drop"
+                    : ""
+                  }
+        `}
                 onClick={() => makeMove(colIndex)}
               />
             ))}
           </div>
         ))}
       </div>
-      
+
       <div className="mt-4 text-xl">
-        {winner ? (
+        {winner && <WinnerEffect /> ? (
           <p className="font-bold">{`${winner.toUpperCase()} Wins!`}</p>
         ) : (
           <p>{`Current Player: ${currentPlayer.toUpperCase()}`}</p>
         )}
       </div>
+      <div className="flex mb-2">
+        {Array(7).fill(null).map((_, colIndex) => (
+          <div
+            key={`indicator-${colIndex}`}
+            className={`
+        w-16 h-4 m-1
+        transition-all duration-100 ease-in-out
+        ${hoverColumn === colIndex
+                ? currentPlayer === 'red'
+                  ? 'bg-red-200 rounded-t-lg'
+                  : 'bg-yellow-200 rounded-t-lg'
+                : 'bg-transparent'}
+      `}
+          />
+        ))}
+      </div>
+
 
       <div className="mt-4 flex gap-4">
         <button
@@ -169,5 +194,5 @@ export default function GameBoard() {
         </button>
       </div>
     </div>
-  )
+  );
 }

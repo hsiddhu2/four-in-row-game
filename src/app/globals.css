@@ -25,3 +25,86 @@ body {
   animation: dropPiece 0.5s ease-in;
 }
 
+.column-hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.confetti {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  opacity: 0;
+}
+
+@keyframes confetti-burst {
+  0% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty));
+    opacity: 0;
+  }
+}
+
+.confetti-piece {
+  animation: 
+    confetti-burst 1s ease-out forwards,
+    spin 1s linear infinite;
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--color);
+  transform-origin: center;
+  opacity: 1;
+  
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+.confetti-piece {
+  position: fixed;
+  background: var(--color);
+  transform-origin: center;
+  opacity: 1;
+  animation: confetti-fall 4s ease-out forwards;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  
+  25% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(var(--tx), var(--ty)) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Add some variation in animation duration */
+.confetti-piece:nth-child(even) {
+  animation-duration: 4.5s;
+}
+
+.confetti-piece:nth-child(3n) {
+  animation-duration: 3.75s;
+}
+
+.confetti-piece:nth-child(5n) {
+  animation-duration: 4.25s;
+}
+
+.column-hover-effect-red {
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.6); /* red glow */
+}
+
+.column-hover-effect-yellow {
+  box-shadow: 0 0 8px rgba(250, 204, 21, 0.6); /* yellow glow */
+}
