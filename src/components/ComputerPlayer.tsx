@@ -16,7 +16,7 @@ export class ComputerPlayer {
       case 'medium':
         return this.getMediumModeMove(board, computerPlayer);
       case 'easy':
-        return this.getEasyModeMove(board, computerPlayer);
+        return this.getEasyModeMove(board);
       default:
         return this.getMediumModeMove(board, computerPlayer);
     }
@@ -30,7 +30,7 @@ export class ComputerPlayer {
     return validColumns;
   }
 
-  private static getEasyModeMove(board: Board, computerPlayer: Player): number {
+  private static getEasyModeMove(board: Board): number {
     const validColumns = this.getValidColumns(board);
     return validColumns[Math.floor(Math.random() * validColumns.length)];
   }
