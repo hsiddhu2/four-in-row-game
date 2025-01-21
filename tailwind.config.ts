@@ -12,6 +12,9 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      spacing: {
+        gridCell: "clamp(2rem, 8vw, 4rem)", // Responsive grid cell size
+      },
     },
   },
   plugins: [],
